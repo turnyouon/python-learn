@@ -17,7 +17,7 @@ if __name__ == "__main__":
     for i in range(1, 10000):
         w = multiprocessing.Process(name = "block",
             target = wait_for_event,
-            args = (e, i))
+            args = (e,))
 
         w.start()
 
