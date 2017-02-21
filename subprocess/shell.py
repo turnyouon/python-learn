@@ -40,5 +40,5 @@ for i in range(1, 10000):
     out = ShellCmd("cat /proc/cpuinfo  | grep 'cpu MHz' | tail -n 1")()
     (name, speed) = out.split(':')
     speed = speed.strip()
-    print '[DEBUG] %d' % 10, speed
+    print '[DEBUG] %d' % i, speed
 
