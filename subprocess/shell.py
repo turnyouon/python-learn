@@ -26,7 +26,7 @@ class ShellCmd(object):
         err.append('return code: %s' % self.process.returncode)
         err.append('stdout: %s' % self.stdout)
         err.append('stderr: %s' % self.stderr)
-        raise ShellError('\n'.join(err))
+        raise err
 
     def __call__(self, is_exception=True):
         (self.stdout, self.stderr) = self.process.communicate()
@@ -41,4 +41,6 @@ for i in range(1, 10000):
     (name, speed) = out.split(':')
     speed = speed.strip()
     print '[DEBUG] %d' % i, speed
+    print out
+
 
