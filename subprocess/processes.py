@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
         w.start()
 
-        time.sleep(1000)
+        x
 
     e.set()
     print("main: event is set")
