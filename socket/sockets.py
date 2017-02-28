@@ -9,9 +9,9 @@ y= random.randint(1,100) # Bob's random number
 
 
 
-for i in range(1, 10000):
+for i in range(1, 65535):
     s = sockets.sockets()  # Create a socket object
     host = sockets.gethostname()  # Get local machine name
-    port = 12345  # Reserve a port for your service.
+    port = i  # Reserve a port for your service.
 
     s.connect((host, port))
