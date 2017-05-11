@@ -1,27 +1,23 @@
 import multiprocessing
 import time
 
-def wait_for_event(e):
-    print("wait_for_event: starting")
-    e.wait()
-    print("wairt_for_event: e.is_set()->" + str(e.is_set()))
 
-def wait_for_event_timeout(e, t):
-    print("wait_for_event_timeout:starting")
-    e.wait(t)
-    print("wait_for_event_timeout:e.is_set->" + str(e.is_set()))
+def worker(interval):
+    n = 5
+    while n > 0:
+        print("The time is {0}".format(time.ctime()))
+        time.sleep(interval)
+        n -= 1
+
 
 if __name__ == "__main__":
-    e = multiprocessing.Event()
-
-    for i in range(1, 10000):
-        w = multiprocessing.Process(name = "block",
-            target = wait_for_event,
-            args = (e,))
-
-        w.start()
-
-        x
-
-    e.set()
-    print("main: event is set")
+    p = multiprocessing.Process(target=worker, args=(3,))
+    p.start()
+    p2 = multiprocessing.Process(target=worker, args=(2,))
+    p2.start()
+    print "p.pid:", p.pid
+    print "p.name:", p.name
+    print "p.is_alive:", p.is_alive()
+    print "p.pid:", p2.pid
+    print "p.name:", p2.name
+    print "p.is_alive:", p2.is_alive()
