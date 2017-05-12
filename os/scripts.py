@@ -4,22 +4,23 @@ import multiprocessing
 
 def shell(cmd):
     try:
-        multiprocessing.Process(target=os.system, args=(cmd,)).start()
+	print cmd
     except Exception as e:
         raise e
 
 
 def get_zone_uuid():
-    cmd = "$(zstack-cli QueryZone fields=uuid | awk -F ',|:|\"' '/uuid {print $5}' | head -1)"
+    cmd = "$(zstack-cli QueryZone fields=uuid " \
+	  "| jq '.[\"inventories\"][].\"uuid\"' | sed 's/\"//g'"
     return shell(cmd)
 
 
-def create_vxlan_pool(num):
+def create_vxlan_pool(num=100):
     zone_uuid = get_zone_uuid()
     vxlan_pool_name = "test-vxlan-%s"
     for i in range(num):
-        create_vxlan_pool_cmd = "zstack-cli CreateL2VxlanNetworkPool zoneUuid=%s" % zone_uuid + \
-                                vxlan_pool_name % i
+        create_vxlan_pool_cmd = "zstack-cli CreateL2VxlanNetworkPool zoneUuid=%s name=test-vxlan-%s" % (zone_uuid, i) 
+
         shell(create_vxlan_pool_cmd)
 
 
