@@ -1,5 +1,6 @@
 import subprocess
-
+import multiprocessing
+import time
 
 def shell(cmd):
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -14,6 +15,7 @@ def shell(cmd):
     if std_err:
         std_err.close()
 
+    print result_str
     return result_str
 
 
@@ -26,18 +28,19 @@ def create_vxlan_pool(num=100):
     zone_uuid = get_zone_uuid()
     for i in range(num):
         create_vxlan_pool_cmd = "zstack-cli CreateL2VxlanNetworkPool zoneUuid=%s name=test-vxlan-%s" % (zone_uuid, i)
-        shell(create_vxlan_pool_cmd)
-
+        multiprocessing.Process(target=shell, args=(create_vxlan_pool_cmd,)).start()
+    time.sleep(10)
 
 def delete_vxlan_pool():
     vxlan_pool_uuids = "zstack-cli QueryL2VxlanNetworkPool name~=test " \
                        "fields=uuid | grep uuid | awk -F ',|\"|:' '{print $5}'"
 
-    uuids = shell(vxlan_pool_uuids).split(' ')
+    result = shell(vxlan_pool_uuids)
+    uuids = result.split('\n')
     for uuid in uuids:
         delete_cmd = "zstack-cli DeleteL2Network uuid=%s" % uuid
-        shell(delete_cmd)
-
+        multiprocessing.Process(target=shell, args=(delete_cmd,)).start()
+       
 
 init_cmd = "[ -f ~/.bash_profile ] && source ~/.bash_profile " \
            "&& [ -f /etc/profile ] && source /etc/profile " \
